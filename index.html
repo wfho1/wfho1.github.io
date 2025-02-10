@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workday Checker</title>
+</head>
+<body>
+  <!-- Input for Date -->
+  <label for="date">Enter a date (YYYY-MM-DD): </label>
+  <input type="date" id="date" name="date">
+  
+  <button onclick="checkWorkday()">Check Workday</button>
+
+  <p id="result"></p>
+
+  <script>
+    // Reference date: February 10, 2025 (Tuesday)
+    const referenceDate = new Date("2025-02-10");
+
+    // Function to check if the given date is a workday
+    function checkWorkday() {
+      const inputDate = document.getElementById("date").value;
+      const resultElement = document.getElementById("result");
+      
+      if (!inputDate) {
+        resultElement.textContent = "Please enter a date.";
+        return;
+      }
+
+      const givenDate = new Date(inputDate);
+      
+      // Calculate the difference in days from the reference date
+      const diffInTime = givenDate - referenceDate;
+      const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert time difference to days
+      
+      // Calculate the day within the two-week cycle
+      const dayInCycle = diffInDays % 14;
+      //alert("dayInCycle :: "+ dayInCycle)
+      
+      // Check if the given date falls within the workday pattern
+      let isWorkday = false;
+      const wfo_array = [0, 2, 4, 8, 10];
+      
+      // Output the result
+      if (wfo_array.includes(dayInCycle)) {
+        resultElement.textContent = "WFH";
+      } else {
+        resultElement.textContent = "WFO";
+      }
+    }
+  </script>
+
+</body>
+</html>
