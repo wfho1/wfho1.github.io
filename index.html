@@ -76,7 +76,7 @@
 		<h2 id="today_status">Today is </h2>
 		<hr/>
 		<label for="date">Check for specific date</label>
-		<input type="date" id="date" name="date" required>
+		<input type="date" id="date" name="date">
 		<button onclick="checkWorkday()">Check Workday</button>
 		<h2 id="result"></h2>
 	</div>
@@ -84,8 +84,8 @@
 
   <script>
   
-   function onBodyLoad() {
-      const resultElement = document.getElementById("today_status");
+	function onBodyLoad() {
+	  const resultElement = document.getElementById("today_status");
       const givenDate = new Date();
       
       // Calculate the difference in days from the reference date
@@ -98,9 +98,11 @@
       
       // Check if the given date falls within the workday pattern
       const wfo_days_array = [0, 2, 4, 8, 10];
-	  
+	  const weekend_days = [5, 6, 12, 13]
       // Output the result
-      if (wfo_days_array.includes(dayInCycle)) {
+	  if(weekend_days.includes(dayInCycle)) {
+		resultElement.textContent = "Enjoy weekend";
+	  } else if (wfo_days_array.includes(dayInCycle)) {
         resultElement.textContent = "Today is WFO";
       } else {
         resultElement.textContent = "Today is WFH";
@@ -129,16 +131,17 @@
       
       // Calculate the day within the two-week cycle
       const dayInCycle = diffInDays % 14;
-      //alert("dayInCycle :: "+ dayInCycle)
-      
+            
       // Check if the given date falls within the workday pattern
-      const wfo_days_array = [0, 2, 4, 8, 10];
-	  
+      const wfh_days_array = [0, 2, 4, 8, 10];
+	  const weekend_days = [5, 6, 12, 13]
       // Output the result
-      if (wfo_days_array.includes(dayInCycle)) {
-        resultElement.textContent = "WFH on "+ inputDate;
+	  if(weekend_days.includes(dayInCycle)) {
+		resultElement.textContent = "Enjoy weekend";
+	  } else if (wfh_days_array.includes(dayInCycle)) {
+        resultElement.textContent = "WFH for "+ inputDate;
       } else {
-        resultElement.textContent = "WFO on "+ inputDate;
+        resultElement.textContent = "WFOs for "+ inputDate;
       }
     }
   </script>
