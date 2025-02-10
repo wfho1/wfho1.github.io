@@ -78,7 +78,7 @@
 		<label for="date">Check for specific date</label>
 		<input type="date" id="date" name="date" required>
 		<button onclick="checkWorkday()">Check Workday</button>
-		<p id="result"></p>
+		<h2 id="result"></h2>
 	</div>
 	
 
@@ -136,9 +136,9 @@
 	  
       // Output the result
       if (wfo_days_array.includes(dayInCycle)) {
-        resultElement.textContent = "WFH";
+        resultElement.textContent = "WFH for "+ inputDate;
       } else {
-        resultElement.textContent = "WFO";
+        resultElement.textContent = "WFO for "+ inputDate;
       }
     }
   </script>
