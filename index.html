@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -86,17 +87,18 @@
                 const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert time difference to days
 
                 // Calculate the day within the two-week cycle
-                const dayInCycle = diffInDays % 14;
-                //alert("dayInCycle :: "+ dayInCycle)
+                const dayInCycle = Math.floor(diffInDays % 14);
+                
 
                 // Check if the given date falls within the workday pattern
-                const wfo_days_array = [0, 2, 8, 10];
+                const wfh_days_array = [0, 2, 8, 10];
                 const weekend_days = [5, 6, 12, 13];
-                // Output the result
+				
+				// Output the result
                 if (weekend_days.includes(dayInCycle)) {
                     resultElement.textContent = "Enjoy weekend";
-                } else if (wfo_days_array.includes(dayInCycle)) {
-                    resultElement.textContent = "Today is WFO";
+                } else if (wfh_days_array.includes(dayInCycle)) {
+                    resultElement.textContent = "Today is WFH";
                 } else {
                     resultElement.textContent = "Today is WFO";
                 }
@@ -123,7 +125,7 @@
                 const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert time difference to days
 
                 // Calculate the day within the two-week cycle
-                const dayInCycle = diffInDays % 14;
+                const dayInCycle = Math.floor(diffInDays % 14);
 
                 // Check if the given date falls within the workday pattern
                 const wfh_days_array = [0, 2, 8, 10];
@@ -132,9 +134,9 @@
                 if (weekend_days.includes(dayInCycle)) {
                     resultElement.textContent = "Enjoy weekend";
                 } else if (wfh_days_array.includes(dayInCycle)) {
-                    resultElement.textContent = "WFH for " + inputDate;
+                    resultElement.textContent = "WFH on " + inputDate;
                 } else {
-                    resultElement.textContent = "WFO for " + inputDate;
+                    resultElement.textContent = "WFO on " + inputDate;
                 }
             }
         </script>
