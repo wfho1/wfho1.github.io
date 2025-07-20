@@ -1,226 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WFO Calendar</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      margin: 0 auto;
-      max-width: 100%;
-    }
-
-    .calendar-header {
-      text-align: center;
-      margin: 30px 0 10px 0;
-    }
-
-    .calendar-header h2 {
-      margin: 0;
-      font-weight: bold;
-      font-size: 1.4em;
-    }
-
-    .calendar-wrapper {
-      overflow-x: auto;
-    }
-
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(40px, 1fr));
-      gap: 5px;
-      text-align: center;
-      min-width: 280px;
-    }
-
-    .calendar div {
-      padding: 10px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
-
-    .calendar .day-name {
-      background-color: #f0f0f0;
-      font-weight: bold;
-    }
-
-    .highlight {
-      background-color: orange;
-      color: white;
-      font-weight: bold;
-    }
-
-    .legend {
-      margin-top: 25px;
-      font-size: 16px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-    }
-
-    .legend span {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      background-color: orange;
-      margin-right: 8px;
-      vertical-align: middle;
-    }
-
-    .calendar-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-
-    .calendar-controls button {
-      padding: 10px 20px;
-      font-size: 1em;
-      cursor: pointer;
-      min-width: 100px;
-    }
-	
-	.today {
-	  border: 2px solid red !important;
-	  border-radius: 6px;
-	  box-sizing: border-box;
-	}
-
-    @media (max-width: 480px) {
-      .calendar div {
-        padding: 8px;
-        font-size: 12px;
-      }
-
-      .calendar-controls {
-        flex-direction: row;
-        gap: 10px;
-      }
-
-      .calendar-controls button {
-        font-size: 0.9em;
-        min-width: 90px;
-      }
-
-      .legend {
-        font-size: 15px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="calendar-header">
-    <h2 id="monthYear"></h2>
-  </div>
-
-  <div class="calendar-wrapper">
-    <div class="calendar" id="calendar"></div>
-  </div>
-
-  <div class="calendar-controls">
-    <button onclick="changeMonth(-1)">Previous</button>
-    <button onclick="changeMonth(1)">Next</button>
-  </div>
-
-  <div class="legend">
-    <span></span> Work from office days
-  </div>
-  
-  <div class="today" style="width:300px; margin-top: 10px; padding: 4px;">
-	Today is hightlighted with red border
-  </div>
-
-<script>
-  // Force a fresh page load (optional in dev)
-  if (performance.navigation.type === 1) {
-    // Reloaded via refresh; no action needed
-  } else {
-    // Add a random query string to bust cache if needed
-    if (!window.location.href.includes("nocache")) {
-      window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'nocache=' + new Date().getTime();
-    }
-  }
-
-  const calendar = document.getElementById('calendar');
-  const monthYear = document.getElementById('monthYear');
-  const referenceDate = '2025-05-12';
-  const officeDays = [0, 2, 4, 8, 10, 11];
-
-  let currentDate = new Date();
-
-  function renderCalendar(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    calendar.innerHTML = '';
-
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                        'July', 'August', 'September', 'October', 'November', 'December'];
-    monthYear.textContent = `${monthNames[month]} ${year}`;
-
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    for (let day of dayNames) {
-      const dayCell = document.createElement('div');
-      dayCell.className = 'day-name';
-      dayCell.textContent = day;
-      calendar.appendChild(dayCell);
-    }
-
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    for (let i = 0; i < firstDay; i++) {
-      const emptyCell = document.createElement('div');
-      calendar.appendChild(emptyCell);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-	  const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-	  const dayCell = document.createElement('div');
-	  dayCell.textContent = day;
-
-	  const modDate = dateDiff(referenceDate, dateStr);
-	  if (officeDays.includes(modDate)) {
-		dayCell.classList.add('highlight');
-	  }
-
-	  const today = new Date();
-	  if (
-		year === today.getFullYear() &&
-		month === today.getMonth() &&
-		day === today.getDate()
-	  ) {
-		dayCell.classList.add('today');
-	  }
-
-	  calendar.appendChild(dayCell);
-	}
-
-  }
-
-  function changeMonth(offset) {
-    currentDate.setMonth(currentDate.getMonth() + offset);
-    renderCalendar(currentDate);
-  }
-
-  function dateDiff(start, end) {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
-    const diffTime = Math.abs(endDate - startDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays % 14;
-  }
-
-  renderCalendar(currentDate);
-</script>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>WFO Calendar</title>
+		<link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="calendar-header">
+            <h2 id="monthYear"></h2>
+        </div>
+        <div class="calendar-wrapper">
+            <div class="calendar" id="calendar"></div>
+        </div>
+        <div class="calendar-controls">
+            <button onclick="changeMonth(-1)">Previous</button>
+            <button onclick="changeMonth(1)">Next</button>
+        </div>
+        <div class="legend">
+            <div><span class="legend-wfo"></span> WFO</div>
+            <div><span class="legend-wfh"></span> WFH</div>
+            <div><span class="legend-weekend"></span> Weekend</div>
+        </div>
+        <div class="today" style="width:300px; margin-top: 10px; padding: 4px;">
+            Today is hightlighted with red border
+        </div>
+        <script src="script.js"></script>
+    </body>
 </html>
