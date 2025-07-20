@@ -1,0 +1,112 @@
+ body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 100%;
+}
+.calendar-header {
+  text-align: center;
+  margin: 30px 0 10px 0;
+}
+.calendar-header h2 {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.4em;
+}
+.calendar-wrapper {
+  overflow-x: auto;
+}
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(40px, 1fr));
+  gap: 5px;
+  text-align: center;
+  min-width: 280px;
+}
+.calendar div {
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+.calendar .day-name {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+.highlight {
+  background-color: orange;
+  color: black;
+  font-weight: bold;
+}
+.highlight-weekend {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+.highlight-wfh {
+  background-color: lightgreen;
+  color: black;
+  font-weight: bold;
+}
+.legend {
+  margin-top: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.legend div {
+  display: flex;
+  align-items: center;
+}
+.legend-wfo {
+  width: 14px;
+  height: 14px;
+  background-color: orange;
+  margin-right: 8px;
+}
+.legend-wfh {
+  width: 14px;
+  height: 14px;
+  background-color: lightgreen;
+  margin-right: 8px;
+}
+.legend-weekend {
+  width: 14px;
+  height: 14px;
+  background-color: green;
+  margin-right: 8px;
+}
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.calendar-controls button {
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  min-width: 100px;
+}
+.today {
+  border: 2px solid red !important;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+@media (max-width: 480px) {
+  .calendar div {
+    padding: 8px;
+    font-size: 12px;
+  }
+  .calendar-controls {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .calendar-controls button {
+    font-size: 0.9em;
+    min-width: 90px;
+  }
+  .legend {
+    font-size: 15px;
+  }
+}
