@@ -84,6 +84,12 @@
       cursor: pointer;
       min-width: 100px;
     }
+	
+	.today {
+	  border: 2px solid red !important;
+	  border-radius: 6px;
+	  box-sizing: border-box;
+	}
 
     @media (max-width: 480px) {
       .calendar div {
@@ -124,6 +130,10 @@
 
   <div class="legend">
     <span></span> Work from office days
+  </div>
+  
+  <div class="today" style="width:300px; margin-top: 10px; padding: 4px;">
+	Today is hightlighted with red border
   </div>
 
 <script>
@@ -171,17 +181,27 @@
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const dayCell = document.createElement('div');
-      dayCell.textContent = day;
+	  const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+	  const dayCell = document.createElement('div');
+	  dayCell.textContent = day;
 
-      const modDate = dateDiff(referenceDate, dateStr);
-      if (officeDays.includes(modDate)) {
-        dayCell.classList.add('highlight');
-      }
+	  const modDate = dateDiff(referenceDate, dateStr);
+	  if (officeDays.includes(modDate)) {
+		dayCell.classList.add('highlight');
+	  }
 
-      calendar.appendChild(dayCell);
-    }
+	  const today = new Date();
+	  if (
+		year === today.getFullYear() &&
+		month === today.getMonth() &&
+		day === today.getDate()
+	  ) {
+		dayCell.classList.add('today');
+	  }
+
+	  calendar.appendChild(dayCell);
+	}
+
   }
 
   function changeMonth(offset) {
