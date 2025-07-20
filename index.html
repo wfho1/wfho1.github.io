@@ -1,144 +1,146 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="pragma" content="no-cache" />
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Expires" content="0" />
-        <title>Workday Checker</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f7fa;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                margin: 0;
-            }
-            .container {
-                background-color: white;
-                padding: 25px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                width: 300px;
-                text-align: left;
-            }
-            h2 {
-                margin-bottom: 20px;
-                color: #333;
-            }
-            label {
-                font-size: 16px;
-                color: #555;
-                display: block;
-                margin-bottom: 8px;
-            }
-            input[type="date"] {
-                width: 100%;
-                padding: 10px;
-                margin-top: 8px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                font-size: 14px;
-                background-color: #f9f9f9;
-                transition: border-color 0.3s;
-            }
-            input[type="date"]:focus {
-                outline: none;
-                border-color: #4caf50;
-                background-color: #fff;
-            }
-            button {
-                margin-top: 20px;
-                padding: 10px 20px;
-                font-size: 16px;
-                background-color: #4caf50;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            button:hover {
-                background-color: #45a049;
-            }
-        </style>
-    </head>
-    <body onload="onBodyLoad()">
-        <!-- Input for Date -->
-        <div class="container">
-            <h2 id="today_status">Today is</h2>
-            <hr />
-            <label for="date">Check for specific date</label>
-            <input type="date" id="date" name="date" onchange="checkWorkday()" />
+<head>
+  <meta charset="UTF-8">
+  <title>WFO Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
 
-            <h2 id="result"></h2>
-        </div>
-        <script>
-            function onBodyLoad() {
-                const resultElement = document.getElementById("today_status");
-                const givenDate = new Date();
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+	  margin-top: 30px;
+    }
 
-                // Calculate the difference in days from the reference date
-                const diffInTime = givenDate - referenceDate;
-                const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert time difference to days
+    .calendar-header h2 {
+      margin: 0;
+      font-weight: bold;
+    }
 
-                // Calculate the day within the two-week cycle
-                const dayInCycle = Math.floor(diffInDays % 14);
-                
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      text-align: center;
+    }
 
-                // Check if the given date falls within the workday pattern
-                const wfh_days_array = [0, 2, 8, 10];
-                const weekend_days = [5, 6, 12, 13];
-				
-				// Output the result
-                if (weekend_days.includes(dayInCycle)) {
-                    resultElement.textContent = "Enjoy weekend";
-                } else if (wfh_days_array.includes(dayInCycle)) {
-                    resultElement.textContent = "Today is WFH";
-                } else {
-                    resultElement.textContent = "Today is WFO";
-                }
-            }
+    .calendar div {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
 
-            // Reference date: February 10, 2025 (Tuesday)
-            const referenceDate = new Date("2025-02-10");
+    .calendar .day-name {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
 
-            // Function to check if the given date is a workday
-            function checkWorkday() {
-                const inputDate = document.getElementById("date").value;
-                const resultElement = document.getElementById("result");
+    .highlight {
+      background-color: orange;
+      color: white;
+      font-weight: bold;
+    }
 
-                if (!inputDate) {
-                    inputDate = new Date();
-                    resultElement.textContent = "Please enter a date.";
-                    return;
-                }
+    .legend {
+      margin-top: 25px;
+    }
 
-                const givenDate = new Date(inputDate);
+    .legend span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background-color: orange;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
 
-                // Calculate the difference in days from the reference date
-                const diffInTime = givenDate - referenceDate;
-                const diffInDays = diffInTime / (1000 * 3600 * 24); // Convert time difference to days
+  <div class="calendar-header">
+    <button onclick="changeMonth(-1)">Previous</button>
+    <h2 id="monthYear"></h2>
+    <button onclick="changeMonth(1)">Next</button>
+  </div>
 
-                // Calculate the day within the two-week cycle
-                const dayInCycle = Math.floor(diffInDays % 14);
+  <div class="calendar" id="calendar"></div>
 
-                // Check if the given date falls within the workday pattern
-                const wfh_days_array = [0, 2, 8, 10];
-                const weekend_days = [5, 6, 12, 13];
-                // Output the result
-                if (weekend_days.includes(dayInCycle)) {
-                    resultElement.textContent = "Enjoy weekend";
-                } else if (wfh_days_array.includes(dayInCycle)) {
-                    resultElement.textContent = "WFH on " + inputDate;
-                } else {
-                    resultElement.textContent = "WFO on " + inputDate;
-                }
-            }
-        </script>
-    </body>
+  <div class="legend">
+    <span></span> Work from office days
+  </div>
+
+<script>
+  const calendar = document.getElementById('calendar');
+  const monthYear = document.getElementById('monthYear');
+  const referenceDate = '2025-05-12';
+  const officeDays = [0, 2, 4, 8, 10, 11];
+
+  let currentDate = new Date();
+
+  function renderCalendar(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    calendar.innerHTML = '';
+
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    monthYear.textContent = `${monthNames[month]} ${year}`;
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let day of dayNames) {
+      const dayCell = document.createElement('div');
+      dayCell.className = 'day-name';
+      dayCell.textContent = day;
+      calendar.appendChild(dayCell);
+    }
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Padding for the first row
+    for (let i = 0; i < firstDay; i++) {
+      const emptyCell = document.createElement('div');
+      calendar.appendChild(emptyCell);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dayCell = document.createElement('div');
+      dayCell.textContent = day;
+	
+	  const modDate = dateDiff(referenceDate, dateStr)
+	  if (officeDays.includes(modDate)) {
+		dayCell.classList.add('highlight');
+      }
+
+      calendar.appendChild(dayCell);
+    }
+  }
+
+  function changeMonth(offset) {
+    currentDate.setMonth(currentDate.getMonth() + offset);
+    renderCalendar(currentDate);
+  }
+  
+  function dateDiff(start, end) {
+	const startDate = new Date(start);
+	const endDate = new Date(end);
+	startDate.setHours(0, 0, 0, 0);
+	endDate.setHours(0, 0, 0, 0);
+	const diffTime = Math.abs(endDate - startDate); // difference in milliseconds
+	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // convert to days
+	return diffDays % 14
+  }
+
+  renderCalendar(currentDate);
+</script>
+
+</body>
 </html>
